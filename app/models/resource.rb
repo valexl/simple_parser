@@ -1,7 +1,7 @@
 class Resource < ActiveRecord::Base
   class << self
     def was_analyzed?(url)
-      #FIXME если будет тербоваться считать localhost:3000/index.html и localhost:3000 как одну страницу то нужно переделать этот метод
+      #FIXME will change this method if localhost:3000 is the same as localhost:3000/index.html
       exists?(source: get_correct_url(url)) 
     end
     
@@ -29,7 +29,7 @@ class Resource < ActiveRecord::Base
   private
 
     def append_tags!
-      #Пример списка тегов TAG1, TAG2,TAG3 TAG4 - я так понял это не опечатка, а так задуманно, поэтому ниже будет ужасное преобразование...
+      # TAG1, TAG2,TAG3 TAG4 - examples of tag list. I think this is not typo. And I converted this uggle string to array ['TAG1', 'TAG2', 'TAG3', 'TAG4']
       return true if self.tag_list.blank?
       self.tag_ids =  self.tag_list.to_s.split(" ").join(",").gsub(/\,+/, ',').split(',').inject([]) do |ids, tag_name|
                         tag = Tag.find_or_create_by title: tag_name

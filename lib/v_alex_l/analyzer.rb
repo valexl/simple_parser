@@ -1,6 +1,6 @@
 class VAlexL::Analyzer
   ###############################
-  ##### анализатор страницы #####
+  ######## Page analyzer ########
   ###############################
   def initialize(resource)
     @resource = resource
