@@ -1,0 +1,20 @@
+h1
+  'Parse your site
+
+- if flash[:notice]
+  p
+    strong
+      u
+        = flash[:notice]
+
+= form_tag '/parse', method: :put do |f|
+  = text_field 'url', '',  name: 'url', value: 'localhost:3000'
+
+  = submit_tag 'Parse'
+
+
+hr
+
+= link_to 'All resourses', resources_path
+|  
+= link_to 'Resque server', resque_server_path
