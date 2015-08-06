@@ -17,19 +17,22 @@ class VAlexL::Analyzer
 
   def analyze!
     return @resource if @stage.nil?
-    @resource.links       = get_links
     @resource.title       = get_title
     @resource.tag_list    = get_tags
     @resource.description = get_description
-    @resource.save!
+    @resource.save! and analyzed_inner_resources!
   end
 
   private
-    def get_links
-      @stage.search('a').inject({}) do |res, a|
-        res[a.text] = a['href']
-        res
+    def analyzed_inner_resources!
+      get_links.each do |inner_path|
+        full_url = get_full_url(@resource.get_root_path, inner_path)
+        VAlexL::Parser.new(full_url).analyze!
       end
+    end
+
+    def get_links
+      @stage.search('a').map{|a| a['href']}
     end
     
     def get_title
@@ -46,4 +49,7 @@ class VAlexL::Analyzer
       description.text unless description.nil?
     end
 
+    def get_full_url(root_path, subpath)
+      File.join(root_path, subpath)
+    end
 end
